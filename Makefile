@@ -3,7 +3,9 @@ LDFLAGS = -L libft -lft
 NAME = ft_ls
 CFLAGS = -Wall -Wextra -Werror -O3 -I incs -I libft #-g3 -fsanitize=address
 SRC =	srcs/main.c \
-		srcs/dir_lister.c	
+		srcs/dir_lister.c \
+		srcs/parser.c \
+		srcs/utils.c
 OBJ = $(SRC:.c=.o)
 RM=/bin/rm -f
 CC = gcc
