@@ -16,5 +16,6 @@ int main(int argc, char **argv) {
     for (int i = 0; path_list[i]; ++i) {
         listDir(path_list[i], flags);
     }
+    freeList(path_list);
     freeAndExit(0);
 }

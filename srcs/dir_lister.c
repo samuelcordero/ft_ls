@@ -20,7 +20,7 @@ char    *isSubDir(char *subdir_name, char *curr_dir) {
 
     struct stat file_stat;
     if (stat(subdir_path, &file_stat) == -1) {
-        perror("stat");
+        perror(subdir_path);
         free(subdir_path);
         return NULL;
     }
@@ -42,7 +42,7 @@ void    printFileDetails(char *file_name, char *dir_path) {
     }
     struct stat file_stat;
     if (stat(file_path, &file_stat) == -1) {
-        perror("stat");
+        perror(file_path);
         return ;
     }
     // File type
@@ -103,7 +103,7 @@ void    printTotalBlocks(char **file_list, char *dir_path) {
             free(tmp);
         }
         if (stat(file_path, &file_stat) == -1) {
-            perror("stat");
+            perror(file_path);   
             continue;
         }
         blocks += (file_stat.st_size) / block_size;
@@ -159,9 +159,11 @@ void    listDir(char *path, int flags) {
     if (flags & __PRINT_DIRNAME) {
         ft_printf("\n");
     }
+    freeList(file_list);
     if (flags & __RECURSIVE) {
         for (i = 0; subdirs_list[i]; ++i) {
             listDir(subdirs_list[i], flags);
         }
     }
+    freeList(subdirs_list);
 }

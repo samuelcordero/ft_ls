@@ -11,15 +11,16 @@ static int compare_files(const char *file1, const char *file2, int reverse_sort,
     else {
         char    *tmp = ft_strjoin(dir_path, "/");
         file_path1 = ft_strjoin(tmp, file1);
-        file_path2 = ft_strjoin(tmp, file1);
+        file_path2 = ft_strjoin(tmp, file2);
         free(tmp);
     }
     
     if (stat(file_path1, &stat1) != 0 || stat(file_path2, &stat2) != 0) {
         perror("stat");
-        //printf("s1:%s s2:%s\n", file_path1, file_path2);
+        //ft_printf("s1:%s s2:%s\n", file_path1, file_path2);
         return 0; // If stat fails, consider them equal for sorting
     }
+    //ft_printf("s1:%s at %u; s2:%s at %u\n", file_path1, stat1.st_mtime, file_path2, stat2.st_mtime);
     free(file_path1);
     free(file_path2);
 
@@ -31,9 +32,9 @@ static int compare_files(const char *file1, const char *file2, int reverse_sort,
         }
     }
     if (reverse_sort) {
-        return stat1.st_mtime < stat2.st_mtime; // Descending order
+        return stat1.st_mtime > stat2.st_mtime; // Descending order
     } else {
-        return stat1.st_mtime > stat2.st_mtime; // Ascending order
+        return stat1.st_mtime < stat2.st_mtime; // Ascending order
     }
 }
 
@@ -65,17 +66,17 @@ int	ft_strncasecmp(const char *s1, const char *s2, size_t n) {
 void sortFiles(char **file_list, int sb_time, int reverse_sort, char *dir_path) {
     int swapped;
     if (sb_time) {
-        char **ptr1, **ptr2;
-
-        for (ptr1 = file_list; *ptr1 != NULL; ptr1++) {
-            for (ptr2 = file_list; *(ptr2 + 1) != NULL; ptr2++) {
-                if (compare_files(*ptr2, *(ptr2 + 1), reverse_sort, dir_path)) {
-                    char *temp = *ptr2;
-                    *ptr2 = *(ptr2 + 1);
-                    *(ptr2 + 1) = temp;
+        do {
+            swapped = 0;
+            for (int i = 0; file_list[i + 1]; i++) {
+                if (compare_files(file_list[i], file_list[i + 1], reverse_sort, dir_path)) { // Ascending order if reverse_sort == 0, descending if reverse_sort == 1
+                    char *tmp = file_list[i];
+                    file_list[i] = file_list[i + 1];
+                    file_list[i + 1] = tmp;
+                    swapped = 1;
                 }
             }
-        }
+        } while (swapped);
     } else {
         // char * ascii bubble sort
         do {
@@ -90,5 +91,11 @@ void sortFiles(char **file_list, int sb_time, int reverse_sort, char *dir_path) 
                 }
             }
         } while (swapped);
+    }
+}
+
+void    freeList(char **list) {
+    for (int i = 0; list[i]; ++i) {
+        free(list[i]);
     }
 }

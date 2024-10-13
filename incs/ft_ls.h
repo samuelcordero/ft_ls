@@ -36,7 +36,8 @@ int parseArgs(int argc, char **argv, char **path_list);
 
 //utils.c
 
-int	ft_strncasecmp(const char *s1, const char *s2, size_t n);
-void sortFiles(char **file_list, int sb_time, int reverse_sort, char *dir_path);
+int	    ft_strncasecmp(const char *s1, const char *s2, size_t n);
+void    sortFiles(char **file_list, int sb_time, int reverse_sort, char *dir_path);
+void    freeList(char **list);
 
 #endif
