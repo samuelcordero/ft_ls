@@ -15,7 +15,7 @@ static int compare_files(const char *file1, const char *file2, int reverse_sort,
         free(tmp);
     }
     
-    if (stat(file_path1, &stat1) != 0 || stat(file_path2, &stat2) != 0) {
+    if (lstat(file_path1, &stat1) != 0 || lstat(file_path2, &stat2) != 0) {
         perror("stat");
         //ft_printf("s1:%s s2:%s\n", file_path1, file_path2);
         return 0; // If stat fails, consider them equal for sorting
@@ -38,25 +38,30 @@ static int compare_files(const char *file1, const char *file2, int reverse_sort,
     }
 }
 
-int	ft_strncasecmp(const char *s1, const char *s2, size_t n) {
+int	ft_strncasecmp(const char *s1, const char *s2, size_t n) { //not really strncasecmp, it also takes hidden file ordering into account
     size_t  i;
+    size_t  j;
 
-    i = 0;
+    j = i = 0;
     if (n == 0)
         return (0);
-
-    while (i < n && s1[i] != '\0' && s2[i] != '\0') {
+    if (s1[0] == '.')
+        ++i;
+    if (s2[0] == '.')
+        ++j;
+    while (i < n && j < n && s1[i] != '\0' && s2[j] != '\0') {
         unsigned char c1 = (unsigned char)ft_tolower(s1[i]);
-        unsigned char c2 = (unsigned char)ft_tolower(s2[i]);
+        unsigned char c2 = (unsigned char)ft_tolower(s2[j]);
 
         if (c1 != c2)
             return c1 - c2;
-        i++;
+        ++i;
+        ++j;
     }
 
-    if (i < n) {
+    if (i < n && j < n) {
         unsigned char c1 = (unsigned char)ft_tolower(s1[i]);
-        unsigned char c2 = (unsigned char)ft_tolower(s2[i]);
+        unsigned char c2 = (unsigned char)ft_tolower(s2[j]);
         return c1 - c2;
     }
 

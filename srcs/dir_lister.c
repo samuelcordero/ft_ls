@@ -19,7 +19,7 @@ char    *isSubDir(char *subdir_name, char *curr_dir) {
     }
 
     struct stat file_stat;
-    if (stat(subdir_path, &file_stat) == -1) {
+    if (lstat(subdir_path, &file_stat) == -1) {
         perror(subdir_path);
         free(subdir_path);
         return NULL;
@@ -41,7 +41,7 @@ void    printFileDetails(char *file_name, char *dir_path) {
         free(tmp);
     }
     struct stat file_stat;
-    if (stat(file_path, &file_stat) == -1) {
+    if (lstat(file_path, &file_stat) == -1) {
         perror(file_path);
         return ;
     }
@@ -92,7 +92,6 @@ void    printTotalBlocks(char **file_list, char *dir_path) {
     char        *file_path;
     struct stat file_stat;
     long        blocks = 0;
-    long        block_size = sysconf(_SC_PAGESIZE) / 512;
 
     for (int i = 0; file_list[i]; ++i) {
         if (dir_path[ft_strlen(dir_path) - 1] == '/') 
@@ -102,12 +101,11 @@ void    printTotalBlocks(char **file_list, char *dir_path) {
             file_path = ft_strjoin(tmp, file_list[i]);
             free(tmp);
         }
-        if (stat(file_path, &file_stat) == -1) {
+        if (lstat(file_path, &file_stat) == -1) {
             perror(file_path);   
             continue;
         }
-        blocks += (file_stat.st_size) / block_size;
-        free(file_path);
+        blocks += file_stat.st_blocks / 2; //divide by 2 so we change from 512byte bocks to 1k blocks
     }
     ft_printf("Total %u\n", blocks);
 }
