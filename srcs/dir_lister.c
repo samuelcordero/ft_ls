@@ -140,18 +140,23 @@ void    listDir(char *path, int flags) {
     if (flags & __PRINT_DIRNAME) {
         ft_printf("%s:\n", path);
     }
+    char    *subdir;
     if (flags & __SHOWLIST) {
         printTotalBlocks(file_list, path);
         for (i = 0; file_list[i]; ++i) {
-            char    *subdir = NULL;
+            subdir = NULL;
             printFileDetails(file_list[i], path);
-            if (flags & __RECURSIVE && NULL != (subdir = isSubDir(file_list[i], path))) {
+            if (flags & __RECURSIVE && ft_strncmp(file_list[i], ".", 2) && ft_strncmp(file_list[i], "..", 3) && NULL != (subdir = isSubDir(file_list[i], path))) {
                 subdirs_list[ctr++] = subdir;
             }
         }
     } else {
         for (i = 0; file_list[i]; ++i) {
+            subdir = NULL;
             ft_printf("%s\n", file_list[i]);
+            if (flags & __RECURSIVE && ft_strncmp(file_list[i], ".", 2) && ft_strncmp(file_list[i], "..", 3) && NULL != (subdir = isSubDir(file_list[i], path))) {
+                subdirs_list[ctr++] = subdir;
+            }
         }
     }
     if (flags & __PRINT_DIRNAME) {
